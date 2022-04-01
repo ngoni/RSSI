@@ -7,5 +7,8 @@ class RssiRepository @Inject constructor(
     private val rssiDataSource: RssiDataSource
 ) {
 
-    fun getRSSI() {}
+    fun getWirelessConnectionInfo() {
+        rssiDataSource.fetchWirelessInfo()
+    }
+
 }

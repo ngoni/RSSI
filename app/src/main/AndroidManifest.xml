@@ -3,6 +3,8 @@
     package="com.scribblex.rssi">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    
+    <uses-feature android:name="android.software.companion_device_setup" />
 
     <application
         android:name=".MainApplication"

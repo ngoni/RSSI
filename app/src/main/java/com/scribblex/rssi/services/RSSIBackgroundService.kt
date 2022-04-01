@@ -38,7 +38,9 @@ class RSSIBackgroundService : Service() {
     }
 
     private fun setupWorkManager() {
-        val repeatInterval: Long = 15
+        // https://developer.android.com/guide/topics/connectivity/wifi-scan
+        // this value is based off recommended Google Practices for Wifi-scanning
+        val repeatInterval: Long = 30
         val uniqueWorkName = "StartRssiBackgroundWork"
         val periodicWorkRequest: PeriodicWorkRequest = PeriodicWorkRequest.Builder(
             RssiBackgroundWorker::class.java,

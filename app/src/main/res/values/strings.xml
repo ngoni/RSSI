@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RSSI</string>
+    <string name="greeting_message">Polling RSSI values for all Wireless Networks near you</string>
 </resources>
