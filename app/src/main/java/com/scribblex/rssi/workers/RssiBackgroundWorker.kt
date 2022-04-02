@@ -5,17 +5,20 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.scribblex.rssi.data.repository.RssiRepository
+import javax.inject.Inject
 
 private const val TAG = "RssiBackgroundWorker"
+const val KEY_RESULT = "result"
 
 class RssiBackgroundWorker(context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
 
-    private lateinit var repository: RssiRepository
+    @Inject
+    lateinit var repository: RssiRepository
 
     override fun doWork(): Result {
-        Log.d(TAG, "Retrieving RSSI for each wireless network near you")
-        repository.getWirelessConnectionInfo()
+        Log.d(TAG, "WorkManger: Executing RssiBackgroundWorker")
+        repository.initWirelessScan()
         return Result.success()
     }
 }

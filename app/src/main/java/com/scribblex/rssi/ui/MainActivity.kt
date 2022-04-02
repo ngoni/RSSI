@@ -4,10 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.scribblex.rssi.R
-
 import com.scribblex.rssi.databinding.ActivityMainBinding
 import com.scribblex.rssi.services.RSSIBackgroundService
 import com.vmadalin.easypermissions.EasyPermissions
@@ -42,11 +40,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        cancelBackgroundService()
-    }
-
     private fun startBackgroundService() {
         Log.d(TAG, "Starting background service")
         backgroundServiceIntent = Intent(this, RSSIBackgroundService::class.java).also {
@@ -54,21 +47,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun cancelBackgroundService() {
-        Log.d(TAG, "Stopping background service")
-        stopService(backgroundServiceIntent)
-    }
-
-
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         Log.d(TAG, "Required permissions denied!!")
-        Toast.makeText(this, "Required permissions denied!!", Toast.LENGTH_SHORT).show()
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             SettingsDialog.Builder(this).build().show()
         } else {
             startBackgroundService()
         }
-
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
