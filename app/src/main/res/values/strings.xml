@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">RSSI</string>
     <string name="greeting_message">Polling RSSI values for all Wireless Networks near you</string>
+    <string name="permissions_rationale">This application cannot work without Location Permission</string>
 </resources>

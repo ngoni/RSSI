@@ -3,7 +3,10 @@
     package="com.scribblex.rssi">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
     <uses-feature android:name="android.software.companion_device_setup" />
 
     <application
