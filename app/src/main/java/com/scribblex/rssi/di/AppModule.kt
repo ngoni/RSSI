@@ -2,6 +2,7 @@ package com.scribblex.rssi.di
 
 import com.scribblex.rssi.data.local.RssiDataSource
 import com.scribblex.rssi.data.remote.ApiService
+import com.scribblex.rssi.data.remote.MockInterceptor
 import com.scribblex.rssi.data.remote.RemoteDataSource
 import com.scribblex.rssi.data.repository.RssiRepository
 import dagger.Module
@@ -39,12 +40,13 @@ object AppModule {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addInterceptor(MockInterceptor())
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("baseUrl")
-            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("http://www.mocky.io")
+            .client(client)
             .build()
     }
 

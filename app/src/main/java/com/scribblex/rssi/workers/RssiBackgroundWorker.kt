@@ -8,7 +8,6 @@ import com.scribblex.rssi.data.repository.RssiRepository
 import javax.inject.Inject
 
 private const val TAG = "RssiBackgroundWorker"
-const val KEY_RESULT = "result"
 
 class RssiBackgroundWorker(context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
@@ -18,7 +17,7 @@ class RssiBackgroundWorker(context: Context, workerParameters: WorkerParameters)
 
     override fun doWork(): Result {
         Log.d(TAG, "WorkManger: Executing RssiBackgroundWorker")
-        repository.initWirelessScan()
+       // repository.initWirelessScan()
         return Result.success()
     }
 }

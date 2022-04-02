@@ -3,12 +3,15 @@ package com.scribblex.rssi.services
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import com.scribblex.rssi.data.repository.ApiRepository
 import com.scribblex.rssi.data.repository.RssiRepository
 import com.scribblex.rssi.workers.RssiBackgroundWorker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -23,7 +26,10 @@ private const val TAG = "RSSIBackgroundService"
 class RSSIBackgroundService : LifecycleService() {
 
     @Inject
-    lateinit var repository: RssiRepository
+    lateinit var rssiRepository: RssiRepository
+
+    @Inject
+    lateinit var apiRepository: ApiRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -31,8 +37,9 @@ class RSSIBackgroundService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        Log.d(TAG, "onStartCommand()")
         startBackgroundWork()
-        startWifiResultsObserver()
+        startWifiScanResultsObserver()
         return START_REDELIVER_INTENT
     }
 
@@ -43,7 +50,7 @@ class RSSIBackgroundService : LifecycleService() {
     private fun startBackgroundWork() {
         Log.d(TAG, "Starting background work")
 //        setupWorkManager()
-        repository.initWirelessScan()
+        rssiRepository.initWirelessScan()
     }
 
     private fun setupWorkManager() {
@@ -66,10 +73,22 @@ class RSSIBackgroundService : LifecycleService() {
         )
     }
 
-    private fun startWifiResultsObserver() {
-        repository.wirelessScanResults.observe(this) {
-            // TODO: make network call
-            Log.d(TAG, "Results: ${it.size}")
+    /**
+     * The below function listens for RSSI updates from the Wifi Scan operation.
+     * The received data is then supposed to be sent to an Imaginary API
+     *
+     * @see RssiPayload - this represents the format of the payload in Json Schema.
+     * The formatting is done using Gson library
+     *
+     * Testing of this section of code wasn't possible as I didn't have an API to use.
+     * Theoretically the logic below should work.
+     * **/
+
+    private fun startWifiScanResultsObserver() {
+        rssiRepository.wirelessScanResults.observe(this) {
+            lifecycleScope.launch {
+                apiRepository.sendRssiData(it)
+            }
         }
     }
 
