@@ -60,6 +60,7 @@ class RSSIBackgroundService : LifecycleService() {
     }
 
     override fun onDestroy() {
+        rssiRepository.unRegisterObserver()
         stopSelf()
         super.onDestroy()
     }

@@ -5,12 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.scribblex.rssi.R
 import com.scribblex.rssi.databinding.ActivityMainBinding
 import com.scribblex.rssi.services.RSSIBackgroundService
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 private const val TAG = "MainActivity"
@@ -33,6 +36,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         const val PERMISSION_LOCATION_WIFI_STATE = 1
     }
 
+    private val viewModel: MainActivityViewModel by lazy {
+        ViewModelProvider(this)[MainActivityViewModel::class.java]
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -42,8 +49,24 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         // assumptions: we are only handling the success use-case for requesting permissions
         if (hasRequiredPermissions()) {
             startBackgroundService()
+            observeViewModel()
         } else {
             requestRequiredPermissions()
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.observeRssiRepositoryChanges()
+        viewModel.getViewState().observe(this) { it ->
+
+            val stringBuilder = StringBuilder()
+            stringBuilder.append("Wifi Scan Time: ${getCurrentDate()} \n")
+            stringBuilder.append("\n")
+
+            it.forEach {
+                stringBuilder.append("SSID: ${it.ssid}, Strength: ${it.strength} \n")
+            }
+            binding.requestPayload.text = stringBuilder.toString()
         }
     }
 
@@ -94,6 +117,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CHANGE_WIFI_STATE
         )
+    }
+
+    private fun getCurrentDate(): String {
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss", Locale.US)
+        return sdf.format(Date())
     }
 
 }

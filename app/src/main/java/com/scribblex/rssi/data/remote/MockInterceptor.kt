@@ -11,6 +11,8 @@ import java.io.IOException
  * Source: https://howtodoandroid.com/android-mock-retrofit-response/
  * */
 
+private const val TAG = "MockInterceptor"
+
 class MockInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -18,7 +20,7 @@ class MockInterceptor : Interceptor {
             val uri = chain.request().url.toUri().toString()
             val requestBody = chain.request().body
             val responseString = when {
-                uri.endsWith("post") -> bodyToString(requestBody)
+                uri.endsWith("post") -> requestBodyToString(requestBody)
                 else -> ""
             }
 
@@ -41,13 +43,13 @@ class MockInterceptor : Interceptor {
         }
     }
 
-    private fun bodyToString(request: RequestBody?): String {
+    private fun requestBodyToString(request: RequestBody?): String {
         return try {
             val buffer = Buffer()
             if (request != null) request.writeTo(buffer) else return ""
             buffer.readUtf8()
         } catch (e: IOException) {
-            "did not work"
+            "$TAG: IOException - ${e.message}"
         }
     }
 }
