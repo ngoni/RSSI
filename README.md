@@ -9,13 +9,13 @@ The WorkManager was used to schedule these periodic Wifi Scans for RSSI values. 
 The UI is meant to display the latest queried Received Signal Strength Indicator values, and the corresponding SSID name. <br/>
 
 **Solution Considerations**<br/>
-MVVM Architecture Pattern<br/>
-Segregation of into the following layers:<br/>
-(1) UI Layer - this is where we have views like Activities/Fragments <br/>
-(2) Domain Layer - this is where we have ViewModels <br/>
-(3) Data Layer - this is where we have our repositories and data sources (WifiManager)<br/>
-Ability to test the above mentioned layers<br/>
-Use of WorkManager for scheduling tasks<br/>
+- MVVM Architecture Pattern<br/>
+- Segregation of into the following layers:<br/>
+  (1) UI Layer - this is where we have views like Activities/Fragments <br/>
+  (2) Domain Layer - this is where we have ViewModels <br/>
+  (3) Data Layer - this is where we have our repositories and data sources (WifiManager)<br/>
+- Ability to test the above mentioned layers<br/>
+- Use of WorkManager for scheduling tasks<br/>
 
 **Mechanism for demonstrating the application making requests** <br/>
 Two approaches have been used:<br/>
