@@ -103,6 +103,7 @@ class RSSIBackgroundService : LifecycleService() {
     private fun startWifiScanResultsObserver() {
         rssiRepository.wirelessScanResults.observe(this) {
             lifecycleScope.launch {
+                Log.d(TAG, "Sending WifiScan results to imaginary API")
                 apiRepository.sendRssiData(it)
             }
         }
