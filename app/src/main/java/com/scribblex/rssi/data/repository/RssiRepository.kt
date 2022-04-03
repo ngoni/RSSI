@@ -21,10 +21,6 @@ class RssiRepository @Inject constructor(
 
     fun initWirelessScan() = rssiDataSource.initWirelessScan()
 
-    fun setWirelessScanResults(result: MutableLiveData<List<Rssi>>) {
-        wirelessScanResults.value = result.value
-    }
-
     fun unRegisterObserver() {
         rssiDataSource.wirelessScanResults.removeObserver(observer)
     }
