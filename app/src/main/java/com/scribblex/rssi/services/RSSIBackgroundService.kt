@@ -1,14 +1,22 @@
 package com.scribblex.rssi.services
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import com.scribblex.rssi.R
 import com.scribblex.rssi.data.repository.ApiRepository
 import com.scribblex.rssi.data.repository.RssiRepository
+import com.scribblex.rssi.ui.MainActivity
 import com.scribblex.rssi.workers.RssiBackgroundWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,26 +39,34 @@ class RSSIBackgroundService : LifecycleService() {
     @Inject
     lateinit var apiRepository: ApiRepository
 
+    companion object {
+        private const val ONGOING_NOTIFICATION = 1
+        private const val FOREGROUND_SERVICE_CHANNEL = "FOREGROUND_SERVICE_CHANNEL"
+        private const val FOREGROUND_CHANNEL = "Foreground Notifications"
+    }
+
     override fun onCreate() {
+        createNotificationChannel()
         super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d(TAG, "onStartCommand()")
+        startForeground(ONGOING_NOTIFICATION, buildNotification())
         startBackgroundWork()
         startWifiScanResultsObserver()
-        return START_REDELIVER_INTENT
+        return START_STICKY
     }
 
     override fun onDestroy() {
+        stopSelf()
         super.onDestroy()
     }
 
     private fun startBackgroundWork() {
         Log.d(TAG, "Starting background work")
-//        setupWorkManager()
-        rssiRepository.initWirelessScan()
+        setupWorkManager()
     }
 
     private fun setupWorkManager() {
@@ -90,6 +106,35 @@ class RSSIBackgroundService : LifecycleService() {
                 apiRepository.sendRssiData(it)
             }
         }
+    }
+
+    private fun buildNotification(): Notification {
+        val pendingIntent: PendingIntent =
+            Intent(applicationContext, MainActivity::class.java).let { notificationIntent ->
+                PendingIntent.getActivity(this, 0, notificationIntent, 0)
+            }
+
+        val notification: Notification =
+            Notification.Builder(this, FOREGROUND_SERVICE_CHANNEL).apply {
+                setContentTitle(getString(R.string.foreground_service_title))
+                setContentIntent(pendingIntent)
+                setSmallIcon(R.drawable.ic_launcher_foreground)
+            }.build()
+        return notification
+    }
+
+    private fun createNotificationChannel() {
+        val notificationChannel = NotificationChannel(
+            FOREGROUND_SERVICE_CHANNEL,
+            FOREGROUND_CHANNEL,
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            lightColor = Color.BLUE
+        }
+
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
     }
 
 }

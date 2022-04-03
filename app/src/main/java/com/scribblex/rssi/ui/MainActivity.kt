@@ -15,6 +15,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
 
+/**
+ *
+ * Entry point to creating our long running service.
+ * To stop the service - force close the application.
+ *
+ * */
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 

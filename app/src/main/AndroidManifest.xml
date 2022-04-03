@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.scribblex.rssi">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,8 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-    <uses-feature android:name="android.software.companion_device_setup" />
 
     <application
         android:name=".MainApplication"
@@ -33,6 +32,13 @@
         <service
             android:name=".services.RSSIBackgroundService"
             android:exported="false" />
+
+        <!--Source: https://developer.android.com/topic/libraries/architecture/workmanager/advanced/custom-configuration -->
+        <!-- If you want to disable android.startup completely. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
 
     </application>
 
