@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.scribblex.rssi.MainApplication
 import com.scribblex.rssi.data.entities.Rssi
 import javax.inject.Inject
 
@@ -20,12 +19,14 @@ import javax.inject.Inject
 
 private const val TAG = "RssiDataSource"
 
-class RssiDataSource @Inject constructor() {
+class RssiDataSource @Inject constructor(_context: Context) {
 
     val wirelessScanResults = MutableLiveData<List<Rssi>>()
 
+    private val context = _context
+
     private val wifiManager =
-        MainApplication.appContext.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        context.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
     private val wifiScanReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -66,11 +67,11 @@ class RssiDataSource @Inject constructor() {
     private fun registerReceiver() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
-        MainApplication.appContext.registerReceiver(wifiScanReceiver, intentFilter)
+        context.registerReceiver(wifiScanReceiver, intentFilter)
     }
 
     private fun unRegisterReceiver() {
-        MainApplication.appContext.unregisterReceiver(wifiScanReceiver)
+        context.unregisterReceiver(wifiScanReceiver)
     }
 
     private fun processWifiScanResults() {
@@ -78,6 +79,10 @@ class RssiDataSource @Inject constructor() {
         wifiManager.scanResults.forEach {
             result.add(Rssi(ssid = it.SSID, strength = it.level))
         }
+        setWirelessScanResults(result)
+    }
+
+    private fun setWirelessScanResults(result: MutableList<Rssi>) {
         wirelessScanResults.value = result
     }
 }
