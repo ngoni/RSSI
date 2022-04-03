@@ -20,7 +20,12 @@ and sends this data to an imaginary Api. <br/>
 **Mechanism for demonstrating the application making requests** <br/>
 - Two approaches have been used:<br/>
   (1) The RSSI values are displayed in the MainActivity UI within 15 minutes (this is the min time WorkManager enforces between tasks) <br/>
+  
+  ![1649025801981](https://user-images.githubusercontent.com/1165257/161452246-215deeeb-ec61-47cc-8380-7abecfaea811.jpeg)
+  
   (2) Check Logcat statements using the filter: "OkHttpClient". The Json payload for the network request and response are logged.<br/>
+  
+  ![Screenshot 2022-04-04 at 00 45 51](https://user-images.githubusercontent.com/1165257/161452267-1e3c8df9-8256-44c1-aa2c-2ecb768a4532.png)
 
 **Testing Instructions** <br/>
 
