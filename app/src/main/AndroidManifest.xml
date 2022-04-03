@@ -30,7 +30,7 @@
         </activity>
 
         <service
-            android:name=".services.RSSIBackgroundService"
+            android:name=".services.RssiBackgroundService"
             android:exported="false" />
 
         <!--Source: https://developer.android.com/topic/libraries/architecture/workmanager/advanced/custom-configuration -->

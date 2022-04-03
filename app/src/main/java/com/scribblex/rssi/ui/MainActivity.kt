@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.scribblex.rssi.R
 import com.scribblex.rssi.databinding.ActivityMainBinding
-import com.scribblex.rssi.services.RSSIBackgroundService
+import com.scribblex.rssi.services.RssiBackgroundService
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun startBackgroundService() {
         Log.d(TAG, "Starting background service")
-        backgroundServiceIntent = Intent(this, RSSIBackgroundService::class.java).also {
+        backgroundServiceIntent = Intent(this, RssiBackgroundService::class.java).also {
             startService(it)
         }
     }
