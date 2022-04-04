@@ -10,7 +10,7 @@ and sends this data to an imaginary Api. <br/>
 
 **Solution Considerations**<br/>
 - MVVM Architecture Pattern<br/>
-- Segregation of into the following layers:<br/>
+- Segregation of the app into the following layers:<br/>
   (1) UI Layer - this is where we have views like Activities/Fragments <br/>
   (2) Domain Layer - this is where we have ViewModels <br/>
   (3) Data Layer - this is where we have our repositories and data sources (WifiManager)<br/>
